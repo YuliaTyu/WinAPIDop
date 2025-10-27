@@ -8,33 +8,33 @@
 
 CONST CHAR g_sz_CLASS_NAME[] = "Calc_SPU_411";
 
-CONST INT g_i_BUTTON_SIZE = 80;//ðàçìåð êíîïêè
-CONST INT g_i_INTERVAL = 2;//ðàçìåð èíòåðâàëà ìåæäó êíîïêàìè
-CONST INT g_i_BUTTIN_DOUBLE_SIZE = g_i_BUTTON_SIZE * 2 + g_i_INTERVAL;//äâîéíàÿ êíîïêà ñ èíòåðâàëîì
+CONST INT g_i_BUTTON_SIZE = 80;//размер кнопки
+CONST INT g_i_INTERVAL = 2;//размер интервала между кнопками
+CONST INT g_i_BUTTIN_DOUBLE_SIZE = g_i_BUTTON_SIZE * 2 + g_i_INTERVAL;//двойная кнопка с интервалом
 
-CONST INT g_i_START_X = 10;//íà÷àëüíûå êîîðäèíàòû
+CONST INT g_i_START_X = 10;//начальные координаты
 CONST INT g_i_START_Y = 10;
-CONST INT g_i_SCREEN_WIDTH = (g_i_BUTTON_SIZE + g_i_INTERVAL) * 5 - g_i_INTERVAL;//êîè÷åñâòî êîëîíîê
+CONST INT g_i_SCREEN_WIDTH = (g_i_BUTTON_SIZE + g_i_INTERVAL) * 5 - g_i_INTERVAL;//коичесвто колонок
 CONST INT g_i_SCREEN_HEIGHT = g_i_BUTTON_SIZE;
 
-CONST INT g_i_BUTTON_START_X = g_i_START_X; //âûðàâíèâàíèå êíîïîê 
+CONST INT g_i_BUTTON_START_X = g_i_START_X; //выравнивание кнопок 
 CONST INT g_i_BUTTON_START_Y = g_i_START_Y + g_i_SCREEN_HEIGHT + g_i_INTERVAL * 4;
 
-//ìàññèâ ñ êíîïêàìè
+//массив с кнопками
 CONST CHAR g_OPERATIONS[] = "+-*/";
-CONST INT g_i_OPERATIONS_START_X = g_i_BUTTON_START_X + (g_i_BUTTON_SIZE + g_i_INTERVAL) * 3;//íà÷àëî êîððäèíàò îïåðàöèîííûõ +-*/êíîïîê
+CONST INT g_i_OPERATIONS_START_X = g_i_BUTTON_START_X + (g_i_BUTTON_SIZE + g_i_INTERVAL) * 3;//начало коррдинат операционных +-*/кнопок
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 VOID SetSkin(HWND hwnd, CONST CHAR SZ_SKIN[]);
 
-//shift - êîëè÷åñòâî êíîïîê
+//shift - количество кнопок
 #define BUTTON_SHIFT_X(shift) g_i_BUTTON_START_X + (g_i_BUTTON_SIZE + g_i_INTERVAL)*shift
 #define BUTTON_SHIFT_Y(shift) g_i_BUTTON_START_Y + (g_i_BUTTON_SIZE + g_i_INTERVAL)*(shift)
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
 {
-	//1 Ðåãèñòðàöèÿ êëàññà îêíà
-	WNDCLASSEX wClass;//ñòðóêòóðà îïèñûâàþùàÿ êëàññ îêíà
+	//1 Регистрация класса окна
+	WNDCLASSEX wClass;//структура описывающая класс окна
 	ZeroMemory(&wClass, sizeof(wClass));
 
 	wClass.style = 0;
@@ -42,30 +42,30 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	wClass.cbWndExtra = 0;
 	wClass.cbClsExtra = 0;
 
-	wClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));//äîáàâëåíèå èêîíêè
-	wClass.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDC_BUTTON_0));//äîáàâëåíèå èêîíêè
+	wClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));//добавление иконки
+	wClass.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDC_BUTTON_0));//добавление иконки
 	wClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wClass.hbrBackground = (HBRUSH)COLOR_WINDOW;
 
 	wClass.hInstance = hInstance;
 	wClass.lpfnWndProc = WndProc;
 	wClass.lpszMenuName = NULL;
-	wClass.lpszClassName = g_sz_CLASS_NAME;//çàéòè â ñâîéñòâà è ïîìåíÿòü ÿçûê
+	wClass.lpszClassName = g_sz_CLASS_NAME;//зайти в свойства и поменять язык
 
 	if (!RegisterClassEx(&wClass))
 	{
 		MessageBox(NULL, "Class reg failed", "", MB_OK | MB_ICONERROR);
 		return 0;
 	}
-	//2 Ñîçäàíèå îêíà
+	//2 Создание окна
 	HWND hwnd = CreateWindowEx
 	(
 		NULL,
 		g_sz_CLASS_NAME,
 		g_sz_CLASS_NAME,
-		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME ^ WS_MAXIMIZEBOX,//WIN 32 èñêëþ÷àåì èçìåíåíèå ðàçìåðà îêíà
-		CW_USEDEFAULT, CW_USEDEFAULT,//ïîçèöèÿ îêíà
-		g_i_SCREEN_WIDTH + 2 * g_i_START_X + 16,//ðàçìåð îêíà //âûðàâíèâàíèå ïî øèðèíå îêíà äî ïèñêåëÿ +16!!!
+		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME ^ WS_MAXIMIZEBOX,//WIN 32 исключаем изменение размера окна
+		CW_USEDEFAULT, CW_USEDEFAULT,//позиция окна
+		g_i_SCREEN_WIDTH + 2 * g_i_START_X + 16,//размер окна //выравнивание по ширине окна до пискеля +16!!!
 		g_i_BUTTON_START_Y + (g_i_BUTTON_SIZE + g_i_INTERVAL) * 4 + 42,
 		NULL,
 		NULL,
@@ -81,7 +81,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
 
-	//3 çâàïóñê öèêëà ñîîáùåíèé
+	//3 звапуск цикла сообщений
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
@@ -116,7 +116,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL),
 			NULL
 		);
-		//ñîçäàíèå êíîïîê îò 1 äî 9
+		//создание кнопок от 1 до 9
 		INT digit = 1;
 		CHAR sz_digit[2] = "0";
 
@@ -140,7 +140,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				digit++;
 			}
 		}
-		//ñîçäàíèå 0
+		//создание 0
 		HWND hButtoh0 = CreateWindowEx
 		(
 			NULL, "BUTTON", "0",
@@ -163,7 +163,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			);
 		SendMessage(hButtoh0, BM_SETIMAGE, 0, (LPARAM)hImage0);*/
 
-		//ñîçäàíèå òî÷êè
+		//создание точки
 		CreateWindowEx
 		(
 			NULL, "BUTTON", ".",
@@ -177,7 +177,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL),
 			NULL
 		);
-		//ñîçäàíèå êíîïîê îïåðàòîðîâ
+		//создание кнопок операторов
 		CHAR operation[2] = "";
 		for (int i = 0; i < 4; i++)
 		{
@@ -232,7 +232,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			NULL
 		);
 
-		SetSkin(hwnd, "metal_mistral");//âûçîâ êíîïîê èç ôàéëà
+		//SetSkin(hwnd, "metal_mistral");
 	}
 
 	break;
@@ -243,10 +243,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CHAR sz_digit[2] = {};
 		HWND hEdit = GetDlgItem(hwnd, IDC_EDIT);
 		SendMessage(hEdit, WM_GETTEXT, SIZE, (LPARAM)sz_display);
-		if (LOWORD(wParam) >= IDC_BUTTON_0 && LOWORD(wParam) <= IDC_BUTTON_9)//ïîêàçûâàåò öèôðû â ýêðàíå
+		if (LOWORD(wParam) >= IDC_BUTTON_0 && LOWORD(wParam) <= IDC_BUTTON_9)
 		{
 			if (operation_input)sz_display[0] = 0;
-			sz_digit[0] = LOWORD(wParam) - IDC_BUTTON_0 + 48; //ASCII 0 - 48 ÏÎÝÒÎÌÓ ÄËß ÏÅÐÅÕÎÄÀ À ÄÐÓÃÓÞ ÖÈÔÐÓ +48
+			sz_digit[0] = LOWORD(wParam) - IDC_BUTTON_0 + 48; 
 			if (strcmp(sz_display, "0"))
 				strcat(sz_display, sz_digit);
 			else
@@ -276,7 +276,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			input = operation_input = FALSE;
 			SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)"0");
 		}
-		//îáðàáîòêà îïåðàöèé
+		
 		if (LOWORD(wParam) >= IDC_BUTTON_PLUS && LOWORD(wParam) <= IDC_BUTTON_SLASH)
 		{
 			if (input)
@@ -302,14 +302,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			sprintf(sz_display, "%g", a);
 			SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)sz_display);
 		}
-
 	}
 	break;
 
-
 	case WM_KEYDOWN:
 	{
-		if (GetKeyState(VK_SHIFT) < 0 && wParam == 0x38)// '*'îíà æå 8 - Â êîíòåêñòå ASCII 0x38  ýòî êîä ñèìâîëà «8»
+		if (GetKeyState(VK_SHIFT) < 0 && wParam == 0x38)// '*'/ 8 -  ASCII 0x38  «8»
 		{
 			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETSTATE, TRUE, 0);
 		}
@@ -360,10 +358,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SendMessage(GetDlgItem(hwnd, wParam - '0' + IDC_BUTTON_0), BM_SETSTATE, FALSE, 0);
 		}
 		else if (wParam >= 0x60 && wParam <= 0x69)
-			//÷òî ÷èñëà îò 60 äî 69 â êîíòåêñòå íóìåðîëîãèè ìîãóò îçíà÷àòü ýòàïû ïåðåõîäà ñîçíàíèÿ 
-			// îò ïðèìèòèâíîãî, ïî÷òè æèâîòíîãî óðîâíÿ, 
-			// äî ñîñòîÿíèÿ ãîòîâíîñòè ê äóõîâíîìó âîñõîæäåíèþ.!!!!!!))))) 
-
 		{
 			SendMessage(hwnd, WM_COMMAND, LOWORD(wParam - 0x60 + IDC_BUTTON_0), 0);
 			SendMessage(GetDlgItem(hwnd, wParam - 0x60 + IDC_BUTTON_0), BM_SETSTATE, FALSE, 0);
@@ -421,7 +415,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	return FALSE;
 }
-VOID SetSkin(HWND hwnd, CONST CHAR SZ_SKIN[])
+/*VOID SetSkin(HWND hwnd, CONST CHAR SZ_SKIN[])
 {
 	for (int i = 0; i < 10; i++)
 	{
@@ -439,4 +433,4 @@ VOID SetSkin(HWND hwnd, CONST CHAR SZ_SKIN[])
 		);
 		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_0 + i), BM_SETIMAGE, 0, (LPARAM)hBitmap);
 	}
-}
+}*/
