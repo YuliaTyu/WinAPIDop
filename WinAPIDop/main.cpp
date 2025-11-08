@@ -26,6 +26,7 @@ CONST INT g_i_OPERATIONS_START_X = g_i_BUTTON_START_X + (g_i_BUTTON_SIZE + g_i_I
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 VOID SetSkin(HWND hwnd, CONST CHAR SZ_SKIN[]);
+VOID SetSkinDLL(HWND hwnd, CONST CHAR SZ_SKIN[]);
 
 
 
@@ -235,7 +236,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			NULL
 		);
 
-		SetSkin(hwnd, "metal_mistral");
+		//SetSkin(hwnd, "metal_mistral");
+		SetSkinDLL(hwnd, "square_blue");
 	}
 
 	break;
@@ -436,5 +438,26 @@ VOID SetSkin(HWND hwnd, CONST CHAR SZ_SKIN[])
 		);
 		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_0 + i), BM_SETIMAGE, 0, (LPARAM)hBitmap);
 	}
+}
+VOID SetSkinDLL(HWND hwnd, CONST CHAR SZ_SKIN[])
+{
+	HMODULE hSkin = LoadLibrary(SZ_SKIN);
+	for (int i = IDC_BUTTON_0; i <= IDC_BUTTON_EQUAL; i++)
+	{
+		//CHAR sz_filename[FILENAME_MAX] = {};
+		//sprintf(sz_filename, "ButtonsBMP\\%s\\button_%i.bmp", SZ_SKIN, i);
+		HBITMAP hBitmap = (HBITMAP)LoadImage
+		(
+			hSkin,
+			MAKEINTRESOURCE(i),
+			IMAGE_BITMAP,
+			i > IDC_BUTTON_0 ? g_i_BUTTON_SIZE : g_i_BUTTIN_DOUBLE_SIZE,
+			i == IDC_BUTTON_EQUAL? g_i_BUTTIN_DOUBLE_SIZE: g_i_BUTTON_SIZE,
+			LR_SHARED
+		);
+		SendMessage(GetDlgItem(hwnd, i), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmap);
+	}
+	FreeLibrary(hSkin);
+	
 }
 
