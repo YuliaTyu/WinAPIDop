@@ -4,8 +4,6 @@
 #include<stdio.h>
 #include"resource.h"
 
-
-
 CONST CHAR g_sz_CLASS_NAME[] = "Calc_SPU_411";
 
 CONST INT g_i_BUTTON_SIZE = 80;//размер кнопки
@@ -27,8 +25,6 @@ CONST INT g_i_OPERATIONS_START_X = g_i_BUTTON_START_X + (g_i_BUTTON_SIZE + g_i_I
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 VOID SetSkin(HWND hwnd, CONST CHAR SZ_SKIN[]);
 VOID SetSkinDLL(HWND hwnd, CONST CHAR SZ_SKIN[]);
-
-
 
 //shift - количество кнопок
 #define BUTTON_SHIFT_X(shift) g_i_BUTTON_START_X + (g_i_BUTTON_SIZE + g_i_INTERVAL)*shift
@@ -106,6 +102,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 	{
+		AllocConsole();//открывает консоль
+		freopen("CONOUT$", "w", stdout);
 		HWND hEdit = CreateWindowEx
 		(
 			NULL,
@@ -119,6 +117,23 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL),
 			NULL
 		);
+		//создание шрифта
+		AddFontResourceEx("Fonts\\digital-7 (mono).ttf", FR_PRIVATE,0);
+		HFONT hFont = CreateFont
+		(
+			g_i_SCREEN_HEIGHT - 2,
+			g_i_SCREEN_HEIGHT / 2,
+			0, 0,
+			500, 0, 0, 0,
+			DEFAULT_CHARSET,
+			OUT_DEFAULT_PRECIS,
+			CLIP_CHARACTER_PRECIS,
+			ANTIALIASED_QUALITY,
+			DEFAULT_PITCH,
+			"Digital-7 Mono"
+		);
+		SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
+
 		//создание кнопок от 1 до 9
 		INT digit = 1;
 		CHAR sz_digit[2] = "0";
